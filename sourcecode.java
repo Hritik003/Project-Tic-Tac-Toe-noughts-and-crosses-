@@ -1,110 +1,178 @@
 package proj;
 import java.util.Scanner;
+
 import java.util.Random;
 
 public class sourcecode {
-    public static void main(String[] args) {
-    	System.out.println("Welcome to the TIC TAC TOE game :) ");
-		
-    	char[][] Board = {{' ',' ',' '},
-    	                  {' ',' ',' '},
-    	                  {' ',' ',' '}}; 
-    	
-    	PrintBoard(Board);
-    	Scanner in = new Scanner(System.in);
-    	userinput(Board, in);
-    	Random cp = new Random();
-    	int compturn;
-    	while(true)
-    	{
-    		 compturn = cp.nextInt(9)+1;
-    		if(cellalreadyoccupied(Board, Integer.toString(compturn)))
-    		{
-    			break;
-    		}
-    		placemove( Board, Integer.toString(compturn),'O');
-    		
-    	}
-    	PrintBoard(Board);	
-    	
-    	
-	}//end main
-    private static boolean cellalreadyoccupied(char[][] Board, String cell)
-    {
-    	switch(cell)
-    	{
-    	case "1":
-			return (Board[0][0] == ' ');
-		case "2":
-			return (Board[0][1] == ' ');
-		case "3":
-			return (Board[0][2] == ' ');
-		case "4":
-			return (Board[1][0] == ' ');
-		case "5":
-			return (Board[1][1] == ' ');
-		case "6":
-			return (Board[1][2] == ' ');
-		case "7":
-			return (Board[2][0] == ' ');
-		case "8":
-			return (Board[2][1] == ' ');
-		case "9":
-			return (Board[2][2] == ' ');
-		default:
-			return false;
-    	}
-    }
 
-	private static void userinput(char[][] Board, Scanner in) {
-		System.out.println("whats your first move from 1-9?");
-    	String userinput;
-    	userinput = in.nextLine();
-    	System.out.println(userinput);
-    	placemove(Board, userinput,'X');
-	}
-	private static void placemove(char[][] Board, String xturn,char cross) {
-		switch(xturn)
-    	{
-    	case "1":
-    		Board[0][0] = cross;
-    		break;
-    	case "2":
-    		Board[0][1] = cross;
-    		break;
-    	case "3":
-    		Board[0][2] = cross;
-    		break;
-    	case "4":
-    		Board[1][0] = cross;
-    		break;
-    	case "5":
-    		Board[1][1] = cross;
-    		break;
-    	case "6":
-    		Board[1][2] = cross;
-    		break;
-    	case "7":
-    		Board[2][0] = cross;
-    		break;
-    	case "8":
-    		Board[2][1] = cross;
-    		break;
-    	case "9":
-    		Board[2][2] = cross;
-    		break;
-    	default:
-    	    System.out.println(" :( ");
-    	}
+	public static void main(String[] args) {
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		char[][] board = {{' ', ' ', ' '},
+				 	      {' ', ' ', ' '}, 
+				 	      {' ', ' ', ' '}};
+		
+		printBoard(board);
+		
+		while (true) {
+			playerTurn(board, scanner);
+			if (isGameFinished(board)){
+				break;
+			}
+			printBoard(board);
+			
+			computerTurn(board);
+			if (isGameFinished(board)){
+				break;
+			}
+			printBoard(board);
+		}
+		scanner.close();
 	}
 
-	private static void PrintBoard(char[][] Board) {
+
+	private static boolean isGameFinished(char[][] board) {
 		
-    	System.out.println(Board[0][0] + "|" + Board[0][1] + "|" +Board[0][2] );
-    	System.out.println("-+-+-");
-    	System.out.println(Board[1][0] + "|" + Board[1][1] + "|" +Board[1][2] );
-    	System.out.println("-+-+-");
-    	System.out.println(Board[2][0] + "|" + Board[2][1] + "|" +Board[2][2] );
+		if (hasContestantWon(board, 'X')) {	
+			printBoard(board);
+			System.out.println("Player wins!");
+			return true;
+		}
+		
+		if (hasContestantWon(board, 'O')) {	
+			printBoard(board);
+			System.out.println("Computer wins!");
+			return true;
+		}
+		
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == ' ') {
+					return false;
+				}
+			}
+		}
+		printBoard(board);
+		System.out.println("The game ended in a tie!");
+		return true;
+	}
+
+
+	private static boolean hasContestantWon(char[][] board, char symbol) {
+		if ((board[0][0] == symbol && board [0][1] == symbol && board [0][2] == symbol) ||
+			(board[1][0] == symbol && board [1][1] == symbol && board [1][2] == symbol) ||
+			(board[2][0] == symbol && board [2][1] == symbol && board [2][2] == symbol) ||
+			
+			(board[0][0] == symbol && board [1][0] == symbol && board [2][0] == symbol) ||
+			(board[0][1] == symbol && board [1][1] == symbol && board [2][1] == symbol) ||
+			(board[0][2] == symbol && board [1][2] == symbol && board [2][2] == symbol) ||
+			
+			(board[0][0] == symbol && board [1][1] == symbol && board [2][2] == symbol) ||
+			(board[0][2] == symbol && board [1][1] == symbol && board [2][0] == symbol) ) {
+			return true;
+		}
+		return false;
+	}
+
+
+	private static void computerTurn(char[][] board) {
+		Random rand = new Random();
+		int computerMove;
+		while (true) {
+			computerMove = rand.nextInt(9) + 1;
+			if (isValidMove(board, Integer.toString(computerMove))) {
+				break;
+			}
+		}
+		System.out.println("Computer chose " + computerMove);
+		placeMove(board, Integer.toString(computerMove), 'O');
+	}
+
+
+	private static boolean isValidMove (char[][] board, String position) {
+		switch(position) {
+			case "1":
+				return (board[0][0] == ' ');
+			case "2":
+				return (board[0][1] == ' ');
+			case "3":
+				return (board[0][2] == ' ');
+			case "4":
+				return (board[1][0] == ' ');
+			case "5":
+				return (board[1][1] == ' ');
+			case "6":
+				return (board[1][2] == ' ');
+			case "7":
+				return (board[2][0] == ' ');
+			case "8":
+				return (board[2][1] == ' ');
+			case "9":
+				return (board[2][2] == ' ');
+			default:
+				return false;
+		}
+	}
+
+	private static void playerTurn(char[][] board, Scanner scanner) {
+		String userInput;
+		while (true) {
+			System.out.println("Where would you like to play? (1-9)");
+			userInput = scanner.nextLine();
+			if (isValidMove(board, userInput)){
+				break;
+			} else {
+				System.out.println(userInput + " is not a valid move.");
+			}
+		}
+		placeMove(board, userInput, 'X');
+	}
+
+
+	private static void placeMove(char[][] board, String position, char symbol) {
+		switch(position) {
+			case "1":
+				board[0][0] = symbol;
+				break;
+			case "2":
+				board[0][1] = symbol;
+				break;
+			case "3":
+				board[0][2] = symbol;
+				break;
+			case "4":
+				board[1][0] = symbol;
+				break;
+			case "5":
+				board[1][1] = symbol;
+				break;
+			case "6":
+				board[1][2] = symbol;
+				break;
+			case "7":
+				board[2][0] = symbol;
+				break;
+			case "8":
+				board[2][1] = symbol;
+				break;
+			case "9":
+				board[2][2] = symbol;
+				break;
+			default:
+				System.out.println(":(");
+		}
+	}
+
+	
+	
+	
+	private static void printBoard(char[][] board) {
+		System.out.println(board[0][0] + "|" +  board[0][1] + "|" +  board[0][2] );
+		System.out.println("-+-+-");
+		System.out.println(board[1][0] + "|" +  board[1][1] + "|" +  board[1][2] );
+		System.out.println("-+-+-");
+		System.out.println(board[2][0] + "|" +  board[2][1] + "|" +  board[2][2] );
 	}
 }
- 
+	
