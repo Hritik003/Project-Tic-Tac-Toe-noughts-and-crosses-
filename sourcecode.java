@@ -132,32 +132,32 @@ public class sourcecode {
 
 	private static void placeMove(char[][] board, String position, char symbol) {
 		switch(position) {
-			case "1":
+			   case "1":
 				board[0][0] = symbol;
 				break;
-			case "2":
+			  case "2":
 				board[0][1] = symbol;
 				break;
-			case "3":
+			  case "3":
 				board[0][2] = symbol;
-				break;
-			case "4":
+			 	break;
+			  case "4":
 				board[1][0] = symbol;
 				break;
-			case "5":
+			  case "5":
 				board[1][1] = symbol;
-				break;
-			case "6":
+			  	break;
+			  case "6":
 				board[1][2] = symbol;
 				break;
-			case "7":
+			 case "7":
 				board[2][0] = symbol;
 				break;
-			case "8":
+			 case "8":
 				board[2][1] = symbol;
 				break;
-			case "9":
-				board[2][2] = symbol;
+			 case "9":
+			 	board[2][2] = symbol;
 				break;
 			default:
 				System.out.println(":(");
